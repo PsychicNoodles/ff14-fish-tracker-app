@@ -157,8 +157,8 @@ def _output_javascript(args, fish_infos):
     def pretty_dump(obj):
         return json.dumps(obj, sort_keys=False, indent=2, ensure_ascii=False).replace('\n', '\n  ')
 
-    with open(args.js_file, 'w', encoding='utf-8') as f:
-        f.write('const FISH_INFO = %s;' % pretty_dump(fish_infos))
+    with open(args.json_file, 'w', encoding='utf-8') as f:
+        f.write(pretty_dump(fish_infos))
 
 
 if __name__ == '__main__':
@@ -166,9 +166,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fish Guide Management Script')
 
     parser.add_argument('-o', '--out', type=str,
-                        default=os.path.join(_SCRIPT_PATH, 'fish_info_data.js'),
-                        dest='js_file',
-                        help='Where to store JavaScript data (fish_info_data.js)')
+                        default=os.path.join(_SCRIPT_PATH, 'fish_info_data.json'),
+                        dest='json_file',
+                        help='Where to store JSON data (fish_info_data.json)')
     parser.add_argument('--game_path', '-gpath', type=str,
                         default=r"C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn",
                         dest='game_path',
