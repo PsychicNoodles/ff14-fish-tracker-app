@@ -590,21 +590,21 @@ def rebuild_fish_data(args):
     # Re-sort the ITEMS dictionary.
     fish_and_tackle_data = OrderedDict(sorted(fish_and_tackle_data.items(), key=lambda t: t[0]))
 
-    with open(args.js_file, 'w', encoding='utf-8') as f:
+    with open(args.json_file, 'w', encoding='utf-8') as f:
         def dump_foldable(o):
             s = json.dumps(o, ensure_ascii=False)
             return s[0] + '\n    ' + s[1:][:-1] + '\n  ' + s[-1]
 
-        f.write("const DATA = {\n")
-        f.write("  FISH: %s,\n" % dump_foldable(fish_data))
-        f.write("  FISHING_SPOTS: %s,\n" % dump_foldable(FISHING_NODES))
-        f.write("  SPEARFISHING_SPOTS: %s,\n" % dump_foldable(SPEARFISHING_NODES))
-        f.write("  ITEMS: %s,\n" % dump_foldable(fish_and_tackle_data))
-        f.write("  WEATHER_RATES: %s,\n" % dump_foldable(WEATHER_RATES))
-        f.write("  WEATHER_TYPES: %s,\n" % dump_foldable(WEATHER_TYPES))
-        f.write("  REGIONS: %s,\n" % dump_foldable(REGIONS))
-        f.write("  ZONES: %s,\n" % dump_foldable(ZONES))
-        f.write("  FOLKLORE: %s\n" % dump_foldable(GATHERING_SUB_CATEGORIES))
+        f.write("{\n")
+        f.write('  "FISH": %s,\n' % dump_foldable(fish_data))
+        f.write('  "FISHING_SPOTS": %s,\n' % dump_foldable(FISHING_NODES))
+        f.write('  "SPEARFISHING_SPOTS": %s,\n' % dump_foldable(SPEARFISHING_NODES))
+        f.write('  "ITEMS": %s,\n' % dump_foldable(fish_and_tackle_data))
+        f.write('  "WEATHER_RATES": %s,\n' % dump_foldable(WEATHER_RATES))
+        f.write('  "WEATHER_TYPES": %s,\n' % dump_foldable(WEATHER_TYPES))
+        f.write('  "REGIONS": %s,\n' % dump_foldable(REGIONS))
+        f.write('  "ZONES": %s,\n' % dump_foldable(ZONES))
+        f.write('  "FOLKLORE": %s\n' % dump_foldable(GATHERING_SUB_CATEGORIES))
         f.write("}\n")
 
     if args.with_icons:
@@ -876,9 +876,9 @@ if __name__ == '__main__':
                                 dest='yaml_file',
                                 help='Path to current fish data YAML file')
     parser_rebuild.add_argument('-o', '--out', type=str,
-                                default=os.path.join(_SCRIPT_PATH, 'data.js'),
-                                dest='js_file',
-                                help='Where to store Java Script data (data.js)')
+                                default=os.path.join(_SCRIPT_PATH, 'data.json'),
+                                dest='json_file',
+                                help='Where to store JSON data (data.json)')
     parser_rebuild.add_argument('--game_path', '-gpath', type=str,
                                 default=r"C:\Program Files (x86)\SquareEnix\FINAL FANTASY XIV - A Realm Reborn",
                                 dest='game_path',
