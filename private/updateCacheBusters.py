@@ -14,13 +14,14 @@ PAGES = [Path('./index.html'),
 
 
 def _update_cache_busters(assets=[], patch=None, all=False, timestamp=None):
-    assets = list(filter(lambda x: x.endswith('.js') or x.endswith('.css') or x == 'sprite.png', assets))
+    assets = list(filter(lambda x: x.endswith('.js') or x.endswith('.json') or x.endswith('.css') or x == 'sprite.png', assets))
     logging.info("Assets to update: %r", assets)
 
     if timestamp is None:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M')
 
     JS_ASSET_PAT = re.compile(r'<script type="text/javascript" src="/?([^?]+)\?([^"]+)"></script>')
+    JSON_ASSET_PAT = re.compile(r'<script id="\w+" type="application/json" src="/?([^?]+)\?([^"]+)"></script>')
     CSS_ASSET_PAT = re.compile(r'<link ref="stylesheet" href="/?([^?]+)?([^"]+)"\s*/>')
 
     for page in PAGES:
@@ -28,10 +29,11 @@ def _update_cache_busters(assets=[], patch=None, all=False, timestamp=None):
         with page.open('rt', encoding='utf-8') as fin:
             for line in fin:
                 def update_asset_timestamp(m: re.Match) -> str:
+                    print(m.group(1))
                     if m.group(1) in assets:
                         asset = m.group(1)
                         new_line = m.string[m.start():m.start(2)]
-                        if patch is not None and (asset.endswith('/data.js') or asset.endswith('/fish_info_data.js')):
+                        if patch is not None and (asset.endswith('/data.json') or asset.endswith('/fish_info_data.json')):
                             new_line += f'{patch}_'
                         new_line += timestamp
                         new_line += m.string[m.end(2):m.end()]
@@ -39,6 +41,7 @@ def _update_cache_busters(assets=[], patch=None, all=False, timestamp=None):
                     else:
                         return m.string[m.start():m.end()]
                 line = JS_ASSET_PAT.sub(update_asset_timestamp, line)
+                line = JSON_ASSET_PAT.sub(update_asset_timestamp, line)
                 line = CSS_ASSET_PAT.sub(update_asset_timestamp, line)
                 output += line
 
